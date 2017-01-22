@@ -1,0 +1,23 @@
+{
+  "name": "mokit-cli",
+  "version": "0.0.1",
+  "description": "mokit cli",
+  "main": "./lib/index.js",
+  "bin": {
+    "mokit": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "mokit",
+    "cli"
+  ],
+  "author": "Houfeng",
+  "license": "MIT",
+  "dependencies": {
+    "cmdline": "^2.0.1",
+    "nokitjs": "^1.26.3",
+    "shify": "^0.1.2"
+  }
+}
