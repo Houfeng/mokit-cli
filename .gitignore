@@ -2,3 +2,5 @@
 *.log
 logs/
 node_modules/
+demo/
+examples/

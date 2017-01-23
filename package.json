@@ -17,7 +17,9 @@
   "license": "MIT",
   "dependencies": {
     "cmdline": "^2.0.1",
-    "nokitjs": "^1.26.3",
-    "shify": "^0.1.2"
+    "copy": "^0.3.0",
+    "request": "^2.79.0",
+    "shify": "^0.1.2",
+    "unzip": "^0.1.11"
   }
 }

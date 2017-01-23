@@ -12,3 +12,4 @@ examples/
 .travis.yml
 server.yml
 webpack.config.js
+demo/
