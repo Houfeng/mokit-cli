@@ -16,6 +16,7 @@
   "author": "Houfeng",
   "license": "MIT",
   "dependencies": {
+    "chmod-plus": "0.0.3",
     "cmdline": "^2.0.1",
     "copy": "^0.3.0",
     "request": "^2.79.0",
