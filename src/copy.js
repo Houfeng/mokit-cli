@@ -1,7 +1,7 @@
 const globby = require('globby');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
-const path = Promise.promisifyAll(require('path'));
+const path = require('path');
 const mkdirp = Promise.promisify(require('mkdirp'));
 
 const BATCH_MAX = 100;

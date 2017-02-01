@@ -7,10 +7,13 @@ const https = require('https');;
 const unzip = require("unzip");
 const copy = require('./copy');
 const chmod = require('./chmod');
+const mkdirp = Promise.promisify(require('mkdirp'));
+const globby = require('globby');
+const utils = require('ntils');
 
 const DOWNLOAD_URL = 'https://codeload.github.com/Houfeng/mokit-app/zip/master';
-const EXTRACT_DIR = path.resolve(__dirname, '../tmp');
-const CACHE_DIR = `${EXTRACT_DIR}/mokit-app-master`;
+const CACHE_DIR = path.resolve(__dirname, '../.cache');
+const TEMPLATE_DIR = `${CACHE_DIR}/mokit-app-master`;
 
 function downloadFile(url) {
   return new Promise((resolve, reject) => {
@@ -41,8 +44,30 @@ function copyFiles(patterns, dist, link) {
     dot: true,
     nodir: true,
     link: link,
-    base: CACHE_DIR
+    base: TEMPLATE_DIR
   });
+}
+
+async function createPackageLinks(pkgFile) {
+  let pkgText = await fs.readFileAsync(pkgFile);
+  if (!pkgText) return;
+  let pkgInfo = JSON.parse(pkgText.toString());
+  if (!pkgInfo.bin) return;
+  let binDir = path.resolve(path.dirname(pkgFile), '../.bin');
+  await mkdirp(binDir);
+  let commands = Object.keys(pkgInfo.bin);
+  await Promise.all(commands.map(cmd => {
+    let cmdFile = path.resolve(path.dirname(pkgFile), pkgInfo.bin[cmd]);
+    console.log(cmd, cmdFile);
+    return fs.symlinkAsync(cmdFile, `${binDir}/${cmd}`);
+  }));
+}
+
+async function createAllLinks(appDir) {
+  let packages = await globby(`${appDir}/**/package.json`);
+  await Promise.all(packages.map(pkgFile => {
+    return createPackageLinks(pkgFile);
+  }));
 }
 
 function run(command, cwd) {
@@ -57,34 +82,34 @@ function run(command, cwd) {
 };
 
 async function init(appDir, force) {
-  if (force || !fs.existsSync(CACHE_DIR)) {
+  await mkdirp(CACHE_DIR);
+  if (force || !fs.existsSync(TEMPLATE_DIR)) {
     console.log('Downloading ...');
     let fileStream = await downloadFile(DOWNLOAD_URL);
     console.log('Extracting ...');
-    await extractFiles(fileStream, EXTRACT_DIR);
+    await extractFiles(fileStream, CACHE_DIR);
     console.log('Installing dependencies ...');
-    await run(`npm i`, CACHE_DIR);
+    await run(`npm i`, TEMPLATE_DIR);
   } else {
     console.log('Cache found ...');
   }
   console.log('Copying files ...');
   await copyFiles([
-    `${CACHE_DIR}/**/*.*`,
-    `${CACHE_DIR}/**/*`,
-    `!${CACHE_DIR}/node_modules/**/*.*`,
-    `!${CACHE_DIR}/node_modules/**/*`
+    `${TEMPLATE_DIR}/**/*.*`,
+    `${TEMPLATE_DIR}/**/*`,
+    `!${TEMPLATE_DIR}/**/node_modules/.bin/**/*.*`,
+    `!${TEMPLATE_DIR}/**/node_modules/.bin/**/*`
   ], appDir);
-  await copyFiles([
-    `${CACHE_DIR}/node_modules/**/*.*`,
-    `${CACHE_DIR}/node_modules/**/*`
-  ], appDir, true);
+  console.log('');
   await chmod([
-    `${appDir}/bin/*.*`
+    `${appDir}/**/bin/**/*.*`,
+    `${appDir}/**/bin/**/*`
   ], '777', {
     dot: true,
     nodir: true,
     symlinks: false
   });
+  await createAllLinks(appDir);
   console.log('Done');
 }
 
