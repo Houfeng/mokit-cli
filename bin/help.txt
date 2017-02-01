@@ -5,7 +5,7 @@ Commands:
   init      初始化一个 mokit 工程
   dev       启动开发服务及实时构建
   build     构建当前工程
-  <cmd>     npm run cmd
+  <cmd>     相关于 npm run <cmd>
 
 Options:
   -f, --force   强制从远程下载新的工程模板

@@ -58,7 +58,6 @@ async function createPackageLinks(pkgFile) {
   let commands = Object.keys(pkgInfo.bin);
   await Promise.all(commands.map(cmd => {
     let cmdFile = path.resolve(path.dirname(pkgFile), pkgInfo.bin[cmd]);
-    console.log(cmd, cmdFile);
     return fs.symlinkAsync(cmdFile, `${binDir}/${cmd}`);
   }));
 }
@@ -100,7 +99,7 @@ async function init(appDir, force) {
     `!${TEMPLATE_DIR}/**/node_modules/.bin/**/*.*`,
     `!${TEMPLATE_DIR}/**/node_modules/.bin/**/*`
   ], appDir);
-  console.log('');
+  console.log('Linking commands ...');
   await chmod([
     `${appDir}/**/bin/**/*.*`,
     `${appDir}/**/bin/**/*`
