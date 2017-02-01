@@ -33,9 +33,9 @@ cmdline
   .root.command(/^[a-z]+$/ig)
   .action(function (command) {
     core.run(`npm run ${command}`).then(() => {
-      process.exit();
+      process.exit(0);
     }).catch(() => {
-      process.exit();
+      process.exit(1);
     })
   })
 
