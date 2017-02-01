@@ -10,6 +10,7 @@ const chmod = require('./chmod');
 const mkdirp = Promise.promisify(require('mkdirp'));
 const globby = require('globby');
 const utils = require('ntils');
+const del = require('del');
 
 const DOWNLOAD_URL = 'https://codeload.github.com/Houfeng/mokit-app/zip/master';
 const CACHE_DIR = path.resolve(__dirname, '../.cache');
@@ -84,6 +85,9 @@ async function init(appDir, force) {
   await mkdirp(CACHE_DIR);
   if (force || !fs.existsSync(TEMPLATE_DIR)) {
     console.log('Downloading ...');
+    await del([`${CACHE_DIR}/**/*.*`, `${CACHE_DIR}/**/*`], {
+      force: true
+    });
     let fileStream = await downloadFile(DOWNLOAD_URL);
     console.log('Extracting ...');
     await extractFiles(fileStream, CACHE_DIR);
