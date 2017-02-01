@@ -1,15 +1,14 @@
-通过 mokit cli 可以快速建工程模板，工程结构是建议性的，您可以根据您的实际情况进行调整，
+这是一个通过 mokit cli 创建的工程模板，工程结构是建议性的，您可以根据您的实际情况进行调整，
 
+### 安装 cli
+```sh
+$ npm i mokit-cli -g
+```
 
 ### 创建工程
 ```sh
-$ cd your_path
+$ mkdir demo && cd demo 
 $ mokit init
-```
-
-### 安装依赖
-```sh
-$ mokit i
 ```
   
   
@@ -19,7 +18,7 @@ $ mokit dev
 ```
 将会首先通过启动开发服务器，然后启动 watch 即时进行代码预编译。
   
-  
+
 ### 执行测试
 ```sh
 $ mokit test
