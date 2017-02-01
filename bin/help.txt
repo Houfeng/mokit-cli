@@ -1,1 +1,17 @@
-这是帮助
+Usage:
+  mokit <command> [options]
+
+Commands:
+  init      初始化一个 mokit 工程
+  dev       启动开发服务及实时构建
+  build     构建当前工程
+  <cmd>     npm run cmd
+
+Options:
+  -f, --force   强制从远程下载新的工程模板
+
+Examples:
+  mkdir demo
+  cd demo
+  mokit init
+  mokit dev

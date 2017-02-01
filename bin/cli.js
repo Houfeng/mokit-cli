@@ -18,11 +18,13 @@ cmdline
    * 创建工程
    */
   .root.command(['init'])
-  .action(function () {
-    core.init(process.cwd()).catch(err => {
-      console.error(err);
-    });;
-  })
+  .option(['-f', '--force'], 'switch')
+  .action(function (force) {
+    core.init(process.cwd(), force)
+      .catch(err => {
+        console.error(err);
+      });
+  }, false)
 
   /**
    * 其它未明确定义的命令
@@ -30,7 +32,7 @@ cmdline
    */
   .root.command(/^[a-z]+$/ig)
   .action(function (command) {
-    core.run(command).then(() => {
+    core.run(`npm run ${command}`).then(() => {
       process.exit();
     }).catch(() => {
       process.exit();

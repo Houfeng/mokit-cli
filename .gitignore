@@ -4,3 +4,5 @@ logs/
 node_modules/
 demo/
 examples/
+.vscode/
+mokit-app-master/
